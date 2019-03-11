@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'list_of_notes.dart';
+import 'sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MyLoginPage extends StatefulWidget {
@@ -12,19 +13,16 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-
   TextEditingController _emailTextController, _passwordTextController;
   String _email, _password;
 
-  FirebaseAuth firebaseAuth =FirebaseAuth.instance;
-
-
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
-    _emailTextController = TextEditingController(text: _email );
-    _passwordTextController = TextEditingController( text: _password);
+    _emailTextController = TextEditingController(text: _email);
+    _passwordTextController = TextEditingController(text: _password);
   }
 
   @override
@@ -74,7 +72,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   ),
                   TextField(
                     controller: _passwordTextController,
-                    onChanged: (value) => _password = value ,
+                    onChanged: (value) => _password = value,
                     cursorColor: Colors.black,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -96,11 +94,33 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     ),
                     color: Colors.black87,
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNoteListPage()));
+                      _firebaseAuth
+                          .signInWithEmailAndPassword(
+                              email: _email, password: _password)
+                          .then((user) => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => MyNoteListPage())))
+                          .catchError((e) => print(e)
+                          );
                     },
                   ),
-                  SizedBox(height : 30.0),
-                  FlatButton( child: Text("Don\'t have an account? Sign up", style: TextStyle(color: Colors.white54, fontSize: 17.0,fontStyle: FontStyle.italic),),)
+                  SizedBox(height: 30.0),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
+                    },
+                    child: Text(
+                      "Don\'t have an account? Sign up",
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.white54,
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  )
                 ]),
           ),
           decoration: BoxDecoration(
