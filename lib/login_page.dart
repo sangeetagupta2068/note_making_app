@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'list_of_notes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyLoginPage extends StatefulWidget {
   final String title;
@@ -12,7 +13,19 @@ class MyLoginPage extends StatefulWidget {
 
 class _MyLoginPageState extends State<MyLoginPage> {
 
-  TextEditingController emailTextController, passwordTextController;
+  TextEditingController _emailTextController, _passwordTextController;
+  String _email, _password;
+
+  FirebaseAuth firebaseAuth =FirebaseAuth.instance;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _emailTextController = TextEditingController(text: _email );
+    _passwordTextController = TextEditingController( text: _password);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +49,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     height: 5.0,
                   ),
                   TextField(
-                    controller: emailTextController,
+                    controller: _emailTextController,
+                    onChanged: (value) => _email = value,
                     cursorColor: Colors.black,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -59,7 +73,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     height: 5.0,
                   ),
                   TextField(
-                    controller: passwordTextController,
+                    controller: _passwordTextController,
+                    onChanged: (value) => _password = value ,
                     cursorColor: Colors.black,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -83,7 +98,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNoteListPage()));
                     },
-                  )
+                  ),
+                  SizedBox(height : 30.0),
+                  FlatButton( child: Text("Don\'t have an account? Sign up", style: TextStyle(color: Colors.white54, fontSize: 17.0,fontStyle: FontStyle.italic),),)
                 ]),
           ),
           decoration: BoxDecoration(
