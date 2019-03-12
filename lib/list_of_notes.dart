@@ -3,6 +3,7 @@ import 'create_note_page.dart';
 import 'package:note_making_app/data_model/note_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'detailed_note_page.dart';
 
 class MyNoteListPage extends StatefulWidget {
   @override
@@ -52,21 +53,24 @@ class _MyNoteListState extends State<MyNoteListPage> {
             padding: EdgeInsets.all(0.0),
             itemCount: notes.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: EdgeInsets.only(top: 6.0,),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      notes[index].title,
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                    Text(notes[index].date),
-                    SizedBox( height: 6.0,),
-                    Divider(
-                      color: Colors.white,
-                    ),
-                  ],
+              return GestureDetector(
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailedNotePage(notes[index]))),
+                child: Container(
+                  padding: EdgeInsets.only(top: 6.0,),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        notes[index].title,
+                        style: TextStyle(fontSize: 25.0),
+                      ),
+                      Text(notes[index].date),
+                      SizedBox( height: 6.0,),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -88,10 +92,6 @@ class _MyNoteListState extends State<MyNoteListPage> {
           color: Colors.white,
         ),
       ),
-//      bottomNavigationBar: BottomAppBar( elevation: 0.0,
-//        color: Colors.deepPurpleAccent,
-//        child: Text("\n\n"),
-//      ),
     );
   }
 }
