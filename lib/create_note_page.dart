@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:note_making_app/data_model/note_data.dart';
 
 class CreateNotePage extends StatefulWidget {
   _CreateNotePageState createState() => _CreateNotePageState();
 }
 
 class _CreateNotePageState extends State<CreateNotePage> {
+
+  Note _note;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +48,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     child: RaisedButton(
                       color: Colors.black,
                       onPressed: (){
+
                         Navigator.pop(context);
                       },
                       child: Text("Save", style: TextStyle( color:  Colors.white),),
