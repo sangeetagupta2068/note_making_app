@@ -30,6 +30,15 @@ class _MyNoteListState extends State<MyNoteListPage> {
       });
   }
 
+  void deleteItem(Note note) async{
+    FirebaseUser _firebaseUser = await _firebaseAuth.currentUser();
+    Firestore.instance
+        .collection('users')
+        .document(_firebaseUser.email)
+        .collection('notes').document(note.title + note.date).delete();
+    ;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,13 +67,28 @@ class _MyNoteListState extends State<MyNoteListPage> {
                 child: Container(
                   padding: EdgeInsets.only(top: 6.0,),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        notes[index].title,
-                        style: TextStyle(fontSize: 25.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                             children: <Widget>[
+                               Text(
+                                 notes[index].title,
+                                 style: TextStyle(fontSize: 25.0),
+                               ),
+                               Text(notes[index].date),
+                             ],
+                          ),
+                          GestureDetector(
+                              onTap: (){
+                                deleteItem(notes[index]);
+                              },
+                              child: Icon(Icons.delete,size: 33.0,))
+                        ],
                       ),
-                      Text(notes[index].date),
                       SizedBox( height: 6.0,),
                       Divider(
                         color: Colors.white,

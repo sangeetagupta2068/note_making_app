@@ -95,11 +95,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     ),
                     color: Colors.black87,
                     onPressed: () {
-
                       _firebaseAuth.signInWithEmailAndPassword(email: _email, password: _password)
                           .then((user) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNoteListPage())))
                           .catchError((e) => print(e));
-
                     },
                   ),
                   SizedBox(height: 30.0),
