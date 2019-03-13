@@ -67,6 +67,9 @@ class _CreateNotePageState extends State<CreateNotePage> {
                       onPressed: () {
                         _note.date =
                             DateTime.now().toIso8601String().toString();
+                        this.setState((){
+                          SnackBar(content: Text("Your note has been added!",));
+                        });
                         saveNote();
                       },
                       child: Text(

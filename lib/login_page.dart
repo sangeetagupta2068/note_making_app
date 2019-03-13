@@ -96,8 +96,12 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     color: Colors.black87,
                     onPressed: () {
                       _firebaseAuth.signInWithEmailAndPassword(email: _email, password: _password)
-                          .then((user) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNoteListPage())))
-                          .catchError((e) => print(e));
+                          .then((user) {
+                            this.setState((){
+                              CircularProgressIndicator();
+                            });
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNoteListPage()));})
+                          .catchError((e) => this.setState((){ Scaffold.of(context).showSnackBar(SnackBar(content: Text("Failed to log you in"),));}));
                     },
                   ),
                   SizedBox(height: 30.0),

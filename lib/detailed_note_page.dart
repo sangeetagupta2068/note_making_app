@@ -11,14 +11,10 @@ class DetailedNotePage extends StatefulWidget{
 
 class _DetailedNotePageState extends State<DetailedNotePage> {
 
-  TextEditingController _titleEditingController, _descriptionEditingController;
 
   @override
   void initState() {
     super.initState();
-    _titleEditingController = TextEditingController(text: widget.note.title);
-    _descriptionEditingController = TextEditingController(text: widget.note.description);
-
   }
   @override
   Widget build(BuildContext context) {
@@ -31,23 +27,27 @@ class _DetailedNotePageState extends State<DetailedNotePage> {
       body: Container(
 
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(widget.note.title,style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600,),),
-                  Text(dateTime.day.toString() + "/" + dateTime.month.toString() + "/" + dateTime.year.toString()),
-          ]
+        child: ListView(
+          children: [
+            Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(widget.note.title,style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600,),),
+                    Text(dateTime.day.toString() + "/" + dateTime.month.toString() + "/" + dateTime.year.toString()),
+            ]
       ),
-            Divider(),
-            Text(
-              widget.note.title,style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400,)
-              )
-          ],
+              Divider(),
+              Text(
+                widget.note.description,style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400,)
+                )
+            ],
+          ),
+        ]
         ),
           decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -55,7 +55,9 @@ class _DetailedNotePageState extends State<DetailedNotePage> {
           end: Alignment.bottomCenter,
           colors: [Colors.lightBlueAccent, Colors.deepPurpleAccent],
         ),
-      )),
+      )
+
+    ),
 //      floatingActionButton : FloatingActionButton(
 //          onPressed: (){},
 //          backgroundColor: Colors.black,
