@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:note_making_app/data_model/note_data.dart';
+import 'list_of_notes.dart';
 
 class CreateNotePage extends StatefulWidget {
   _CreateNotePageState createState() => _CreateNotePageState();
@@ -38,7 +39,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.white54),
                       ),
                     ),
                   ),
@@ -54,7 +55,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.white54),
                       ),
                     ),
                   ),
@@ -99,11 +100,11 @@ class _CreateNotePageState extends State<CreateNotePage> {
      Firestore.instance
         .collection('users')
         .document(_firebaseUser.email)
-        .collection('notes').document(_note.title + DateTime.now().toIso8601String())
+        .collection('notes').document(_note.title + _note.date)
         .setData({
       'title': _note.title,
       'description': _note.description,
       'date': _note.date,
-    }).then((value) => Navigator.pop(context));
+    }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => MyNoteListPage() )));
   }
 }

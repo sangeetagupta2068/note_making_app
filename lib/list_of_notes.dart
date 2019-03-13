@@ -11,32 +11,49 @@ class MyNoteListPage extends StatefulWidget {
 }
 
 class _MyNoteListState extends State<MyNoteListPage> {
-
   List<Note> notes = [];
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void getListOfNotes() async {
-      FirebaseUser _firebaseUser = await _firebaseAuth.currentUser();
-      Firestore.instance
-          .collection('users')
-          .document(_firebaseUser.email)
-          .collection('notes').getDocuments().then(
-              (snapshot) {
-            snapshot.documents.forEach((document) => notes.add(Note(
-                description: document.data['description'],
-                title: document.data['title'],
-                date: document.data['date']
-            )));
-      });
-  }
-
-  void deleteItem(Note note) async{
     FirebaseUser _firebaseUser = await _firebaseAuth.currentUser();
     Firestore.instance
         .collection('users')
         .document(_firebaseUser.email)
-        .collection('notes').document(note.title + note.date).delete();
-    ;
+        .collection('notes')
+        .getDocuments()
+        .then((snapshot) {
+      snapshot.documents.forEach((document) => this.setState(() { notes.add(Note(
+          description: document.data['description'],
+          title: document.data['title'],
+          date: document.data['date']));
+      })
+      );
+    });
+  }
+
+  void deleteItem(Note note, int index) async {
+    FirebaseUser _firebaseUser = await _firebaseAuth.currentUser();
+    Firestore.instance
+        .collection('users')
+        .document(_firebaseUser.email)
+        .collection('notes')
+        .document(note.title + note.date)
+        .delete()
+        .then((value) => this.setState((){notes.removeAt(index);}));
+  }
+
+  void undoDeletion(Note _note, int index) async {
+    FirebaseUser _firebaseUser = await _firebaseAuth.currentUser();
+    Firestore.instance
+        .collection('users')
+        .document(_firebaseUser.email)
+        .collection('notes')
+        .document(_note.title + _note.date)
+        .setData({
+      'title': _note.title,
+      'description': _note.description,
+      'date': _note.date,
+    }).then((value) => this.setState(() {notes.insert(index, _note); this.initState();}));
   }
 
   @override
@@ -58,42 +75,63 @@ class _MyNoteListState extends State<MyNoteListPage> {
             left: 20.0,
             right: 20.0,
           ),
-          child: ListView.builder(
+          child: (notes.length == 0)? Center(child: Text("No notes yet.",style: TextStyle(fontSize: 20.0,),)):ListView.builder(
             padding: EdgeInsets.all(0.0),
             itemCount: notes.length,
             itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailedNotePage(notes[index]))),
-                child: Container(
-                  padding: EdgeInsets.only(top: 6.0,),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                             children: <Widget>[
-                               Text(
-                                 notes[index].title,
-                                 style: TextStyle(fontSize: 25.0),
-                               ),
-                               Text(notes[index].date),
-                             ],
-                          ),
-                          GestureDetector(
-                              onTap: (){
-                                deleteItem(notes[index]);
-                              },
-                              child: Icon(Icons.delete,size: 33.0,))
-                        ],
-                      ),
-                      SizedBox( height: 6.0,),
-                      Divider(
-                        color: Colors.white,
-                      ),
-                    ],
+              return Dismissible(
+                key: ObjectKey(notes[index]),
+                onDismissed: (direction) {
+                  deleteItem(notes[index], index);
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Item deleted"),
+                      action: SnackBarAction(
+                          label: "Undo deletion",
+                          onPressed: () {
+                            //To undo deletion
+                            undoDeletion(notes[index], index);
+                          })));
+                },
+                child: GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetailedNotePage(notes[index]))),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: 6.0,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  notes[index].title,
+                                  style: TextStyle(fontSize: 25.0),
+                                ),
+                                Text(DateTime.parse(notes[index].date).day.toString() + "/" + DateTime.parse(notes[index].date).month.toString() + "/" + DateTime.parse(notes[index].date).year.toString()),
+                              ],
+                            ),
+                            Icon(
+                              Icons.delete,
+                              size: 33.0,
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6.0,
+                        ),
+                        Divider(
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -108,7 +146,8 @@ class _MyNoteListState extends State<MyNoteListPage> {
           )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateNotePage() ));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => CreateNotePage()));
         },
         backgroundColor: Colors.black,
         child: Icon(

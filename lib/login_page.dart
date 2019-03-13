@@ -54,7 +54,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.white54),
                       ),
                       focusedErrorBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.red),
@@ -78,7 +78,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.white54),
                       ),
                       focusedErrorBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.red),

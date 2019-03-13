@@ -10,6 +10,16 @@ class DetailedNotePage extends StatefulWidget{
 }
 
 class _DetailedNotePageState extends State<DetailedNotePage> {
+
+  TextEditingController _titleEditingController, _descriptionEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleEditingController = TextEditingController(text: widget.note.title);
+    _descriptionEditingController = TextEditingController(text: widget.note.description);
+
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -34,11 +44,9 @@ class _DetailedNotePageState extends State<DetailedNotePage> {
           ]
       ),
             Divider(),
-            TextField(
-              decoration: new InputDecoration.collapsed(
-                  hintText: widget.note.description,
-                  hintStyle: TextStyle(fontSize: 17.0,color: Colors.black87),
-              ),)
+            Text(
+              widget.note.title,style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w400,)
+              )
           ],
         ),
           decoration: BoxDecoration(
@@ -48,12 +56,12 @@ class _DetailedNotePageState extends State<DetailedNotePage> {
           colors: [Colors.lightBlueAccent, Colors.deepPurpleAccent],
         ),
       )),
-      floatingActionButton : FloatingActionButton(
-          onPressed: (){},
-          backgroundColor: Colors.black,
-          child: Icon(Icons.mode_edit, color: Colors.white,),
-
-          ),
+//      floatingActionButton : FloatingActionButton(
+//          onPressed: (){},
+//          backgroundColor: Colors.black,
+//          child: Icon(Icons.mode_edit, color: Colors.white,),
+//
+//          ),
     );
   }
 }
